@@ -5,39 +5,22 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.tammamkhalaf.moviesnerds.R
+import com.tammamkhalaf.moviesnerds.databinding.ActivityMainBinding
+import androidx.databinding.DataBindingUtil
 
-class MainActivity : AppCompatActivity(), View.OnClickListener {
-
-    @BindView(R.id.textView)
-    lateinit var movieNameTv: TextView
-
-    @BindView(R.id.button)
-    lateinit var button: Button
-
+class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
     lateinit var movieViewModel:MovieViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        ButterKnife.bind(this)
-        button.setOnClickListener(this)
-
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         movieViewModel = ViewModelProviders.of(this).get(MovieViewModel::class.java)
-        movieViewModel.movieNameMutableLiveData.observe(this, {
-            movieNameTv.text = it
-        })
+        binding.viewModel = movieViewModel
+        binding.lifecycleOwner = this
     }
-
-    override fun onClick(view: View?) {
-        if(view?.id == R.id.button){
-            movieViewModel.getMovieName()
-        }
-    }
-
-
 }
